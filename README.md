@@ -113,9 +113,9 @@ Follow below techniques to design modular React component:
 
 * UI components should be stateless whenever possible.
 
-* Use React [`ErrorBoundary`](https://reactjs.org/docs/error-boundaries.html) around individual component usage to control error in single component on rendering.
+* Use React [`ErrorBoundary`](https://reactjs.org/docs/error-boundaries.html) around individual component usage to control error in single component on rendering. **Always use `ErrorBoundary` around your React component, not individual JSX element.**
 
-* When using javascript to generate user interface, wrap JavaScript code around try/catch to handle error when using SSR (server-side rendering). You can use [`ErrorBoundary`](https://reactjs.org/docs/error-boundaries.html) with try/catch to prevent both client-side rendering and server-side rendering.
+* When using javascript to generate user interface, wrap JavaScript code around try/catch to handle error when using SSR (server-side rendering). You can use [`ErrorBoundary`](https://reactjs.org/docs/error-boundaries.html) with try/catch to prevent both client-side rendering and server-side rendering. **The trick is simple, when using JavaScript code to generate user interface, add try/catch around the component as close as possible to contain error when using server-side rendering**.
 
     **Example:**
     ```js
