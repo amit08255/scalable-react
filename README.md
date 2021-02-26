@@ -162,12 +162,59 @@ Follow below techniques to design modular React component:
 
 * All shared states among container components should be stored in store managers like [storeon](https://github.com/amit08255/storeon).
 
+* Never mix business logic and UI code in container components and UI components. For container components, create a file `actions.js` in same directory as container component file and keep all business logic in `actions.js` file.
+
 ## Writing independent modules
 
-Main principal of modular programming is that all modules should be independent and not know about each other. This means that, you cannot import modules directly because doing that will make your module tightly coupled with other modules imported. To make modules independent from each other, we can use a mediator which allows communication between modules while keeping them independent. One of the simple techniques we can use is [pubsub](https://github.com/amit08255/javascript-pubsub). Pubsub allows communication between modules while keeping them independent.
+Main principal of modular programming is that all modules should be independent and not know about each other. This means that, you cannot import modules directly because doing that will make your module tightly coupled with other modules imported. To make modules independent from each other, we can use a mediator which allows communication between modules while keeping them independent. One of the simple techniques we can use is [pubsub](https://github.com/amit08255/javascript-pubsub). Pubsub messaging technique will allow communication between modules while keeping them independent.
 
 Follow below pattern for independent communication between modules using pubsub:
 
 * Register all modules/internal dependencies required as pubsub subscribers at app entry point. On web, you can think of every page as an entry point.
 
 * For all required dependencies/functionalities in modules, directly publish an event which perform that using subscriber callback.
+
+* Do not import other modules in app in a module. Only exception is that, you can import external dependencies like - React, prop-types, pubsub library. Separating a module from other modules in the app will allow you to directly reuse that module in other apps without lots of configuration, and also allows to test each module independently.
+
+## File Structure
+
+The following file structure is a simple structure of ReactJS NextJS app:
+
+```
+app-directory/
+ ├──pages/                  * this folder contain files for every route in our app.
+ │   │──index.jsx           * JSX file for index page of our app.
+ │   │
+ ├──components/             * this folder contain files for every UI component and styles in our app.
+ │   │──button/             * Simple button component for our app.
+ │      │──index.jsx        * Button UI code.
+ │      │──index.style.jsx  * styled components style for button component
+ │      │
+ ├──containers/             * this folder contains container components.
+ │   │──blogList/           * Container to display blog post list using multiple components.
+ │      │──index.jsx        * container code.
+ │      │──actions.js       * API requests and data processing to prepare response for UI. 
+ │      │
+ ├──services/               * this folder contains services (API requests, business logic etc.)
+ │   │──blogs/              * Blogs API service.
+ │      │──index.js         * Code to get blogs list, add blog post, edit blog post.
+ │      │──utils.js         * Utility functions used in blogs services.
+ │      │
+ ├──stores/                 * this folder contains storeon stores code for app.
+ │   │──blogs.js            * blogs store for keeping shared states of blogs page.
+ │   │
+ ├──utilities/              * this folder contains utility functions used by app.
+ │   │──index.js            * utility functions such as - functional programming utilities like - compose.
+ │   │
+ │──__tests__/              * this folder contain files used by testing framework.
+ │   └──index.jsx           * file which contain test for index page of our app.
+ |──jest.config.js          * configuration file used by our Jest testing framework.
+ │
+ |──next.config.js          * NextJS app configuration file.
+ │
+ |──package.json            * file which contains NodeJS project dependencies and scripts.
+ |
+ |──server.js               * file used by NodeJS to start ExpressJS server which handles app routing, caching and compression.
+ |
+ └──babel.config.js         * Babel configuration file to tell babel how to handle our project file conversion to ES6.
+```
